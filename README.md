@@ -3,7 +3,7 @@
 Static marketing site for [rpcdesk](https://github.com/RPCDesk/rpcdesk), served from
 Cloudflare Pages.
 
-- **Production:** https://rpcdesk.ayushb.com (also https://rpcdesk.pages.dev)
+- **Production:** https://rpcdesk.pages.dev (Cloudflare Pages; no custom domain)
 - **Pages project:** `rpcdesk`
 - **Build step:** none — plain HTML and CSS
 
@@ -33,7 +33,7 @@ To deploy by hand:
 CLOUDFLARE_API_TOKEN=... bunx wrangler@4 pages deploy . --project-name rpcdesk --branch main
 ```
 
-The custom domain is attached to the Pages project, so no DNS change is needed per deploy.
+The project has no custom domain: it is served from `rpcdesk.pages.dev` only.
 
 ## Licensing
 

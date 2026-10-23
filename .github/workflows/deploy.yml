@@ -35,9 +35,9 @@ jobs:
       - name: Check the live site
         run: |
           for attempt in 1 2 3 4 5; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' https://rpcdesk.ayushb.com/)
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://rpcdesk.pages.dev/)
             if [ "$code" = "200" ]; then
-              echo "https://rpcdesk.ayushb.com -> $code"
+              echo "https://rpcdesk.pages.dev -> $code"
               exit 0
             fi
             sleep 10
