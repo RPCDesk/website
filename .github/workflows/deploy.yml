@@ -1,0 +1,46 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          bunx wrangler@4 pages deploy . \
+            --project-name rpcdesk \
+            --branch main \
+            --commit-dirty=false
+
+      - name: Check the live site
+        run: |
+          for attempt in 1 2 3 4 5; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://rpcdesk.ayushb.com/)
+            if [ "$code" = "200" ]; then
+              echo "https://rpcdesk.ayushb.com -> $code"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "site did not return 200 (last: $code)" >&2
+          exit 1
